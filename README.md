@@ -58,16 +58,13 @@ Mineria_de_Datos_2026A/
 
 ---
 
-## 📌 Trabajos
+## 📌 Trabajos Corte 1
 
-### ✔ Trabajo 1
+### ✔ Trabajo 1 ETL-Inicial
 Introducción a la Minería de Datos y conceptos fundamentales.
 
-### ✔ Trabajo 2
+### ✔ Trabajo 2 ETL-Proyecto-Api
 Procesamiento y análisis exploratorio de datos.
-
-### ✔ Trabajo 3
-Implementación de modelos de minería de datos y evaluación.
 
 ---
 
