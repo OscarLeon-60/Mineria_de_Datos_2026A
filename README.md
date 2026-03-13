@@ -79,7 +79,7 @@ Organizar el desarrollo de actividades académicas y evidenciar el aprendizaje p
 
 ## 👨‍💻 Autor
 
-**ALLAN ZAPATA**
+**ALLAN ZAPATA**,
 **OSCAR LEON**
 Asignatura: Minería de Datos  
 Semestre: 2026A
