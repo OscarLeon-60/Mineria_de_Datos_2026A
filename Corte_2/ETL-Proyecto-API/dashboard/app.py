@@ -222,13 +222,19 @@ st.markdown("""
 
 @st.cache_resource
 def get_engine():
-    host     = os.getenv("DB_HOST", "localhost")
-    db       = os.getenv("DB_NAME", "clima_db")
-    user     = os.getenv("DB_USER", "clima_user")
-    password = os.getenv("DB_PASSWORD", "clima1234")
-    port     = os.getenv("DB_PORT", "5432")
+    try:
+        host     = st.secrets["DB_HOST"]
+        db       = st.secrets["DB_NAME"]
+        user     = st.secrets["DB_USER"]
+        password = st.secrets["DB_PASSWORD"]
+        port     = st.secrets["DB_PORT"]
+    except:
+        host     = os.getenv("DB_HOST", "localhost")
+        db       = os.getenv("DB_NAME", "clima_db")
+        user     = os.getenv("DB_USER", "clima_user")
+        password = os.getenv("DB_PASSWORD", "clima1234")
+        port     = os.getenv("DB_PORT", "5432")
     return create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}")
-
 
 @st.cache_data(ttl=300)
 def load_data():
