@@ -46,15 +46,16 @@ La nota definitiva se obtiene según la ponderación establecida en el syllabus 
 
 ## 📂 Estructura del Repositorio
 
+```
 Mineria_de_Datos_2026A/
-    │
-    ├── trabajo_1/
-    ├── trabajo_2/
-    ├── trabajo_3/
-    ├── talleres/
-    ├── proyecto_final/
-    └── README.md
-
+│
+├── trabajo_1/
+├── trabajo_2/
+├── trabajo_3/
+├── talleres/
+├── proyecto_final/
+└── README.md
+```
 
 ---
 
@@ -76,7 +77,7 @@ Organizar el desarrollo de actividades académicas y evidenciar el aprendizaje p
 
 ## 👨‍💻 Autor
 
-**ALLAN ZAPATA**,
-**OSCAR LEON**
-Asignatura: Minería de Datos  
-Semestre: 2026A
+- **ALLAN ZAPATA**,
+- **OSCAR LEON**
+- Asignatura: Minería de Datos  
+- Semestre: 2026A
