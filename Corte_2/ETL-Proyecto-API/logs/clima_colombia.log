@@ -178,3 +178,79 @@
 2026-04-15 20:31:01,749 - INFO - Total alertas: 3
 2026-04-15 20:31:01,749 - INFO - Total errores: 0
 2026-04-15 20:31:01,749 - INFO - ===== FIN DEL PROCESO ETL =====
+2026-04-15 16:30:06,011 - INFO - ===== INICIO DEL PROCESO ETL =====
+2026-04-15 16:30:06,034 - INFO - Conectado a PostgreSQL
+2026-04-15 16:30:06,448 - INFO - Leticia - Temp:27.23 TMin:27.23 TMax:27.23 Hum:78 Viento:1.25
+2026-04-15 16:30:06,892 - INFO - Medellín - Temp:22.97 TMin:22.97 TMax:22.97 Hum:85 Viento:0.4
+2026-04-15 16:30:07,286 - INFO - Arauca - Temp:24.44 TMin:24.44 TMax:24.44 Hum:90 Viento:1.88
+2026-04-15 16:30:07,654 - INFO - Barranquilla - Temp:28.84 TMin:28.84 TMax:28.84 Hum:69 Viento:7.81
+2026-04-15 16:30:08,036 - INFO - Cartagena - Temp:28.4 TMin:28.4 TMax:28.4 Hum:73 Viento:10.48
+2026-04-15 16:30:08,480 - INFO - Tunja - Temp:12.23 TMin:12.23 TMax:12.23 Hum:93 Viento:1.11
+2026-04-15 16:30:08,866 - INFO - Manizales - Temp:20.08 TMin:20.08 TMax:20.08 Hum:85 Viento:1.36
+2026-04-15 16:30:09,244 - INFO - Florencia - Temp:25.78 TMin:25.78 TMax:25.78 Hum:84 Viento:0.46
+2026-04-15 16:30:09,639 - INFO - Yopal - Temp:24.47 TMin:24.47 TMax:24.47 Hum:88 Viento:0.63
+2026-04-15 16:30:10,001 - INFO - Popayán - Temp:18.42 TMin:18.42 TMax:18.42 Hum:95 Viento:1.16
+2026-04-15 16:30:10,370 - INFO - Valledupar - Temp:32.64 TMin:32.64 TMax:32.64 Hum:40 Viento:2.32
+2026-04-15 16:30:10,765 - INFO - Quibdó - Temp:30.89 TMin:30.89 TMax:30.89 Hum:91 Viento:0.88
+2026-04-15 16:30:11,138 - INFO - Montería - Temp:27.76 TMin:27.76 TMax:27.76 Hum:63 Viento:5.73
+2026-04-15 16:30:11,549 - INFO - Bogotá - Temp:15.26 TMin:15.26 TMax:15.26 Hum:87 Viento:0.63
+2026-04-15 16:30:11,951 - INFO - Inírida - Temp:26.44 TMin:26.44 TMax:26.44 Hum:91 Viento:1.58
+2026-04-15 16:30:12,331 - INFO - San José del Guaviare - Temp:27 TMin:27 TMax:27 Hum:86 Viento:1.5
+2026-04-15 16:30:12,712 - INFO - Neiva - Temp:25.42 TMin:25.42 TMax:25.42 Hum:81 Viento:0.13
+2026-04-15 16:30:13,086 - INFO - Riohacha - Temp:28.22 TMin:28.22 TMax:28.22 Hum:71 Viento:7.64
+2026-04-15 16:30:13,450 - INFO - Santa Marta - Temp:30.6 TMin:30.6 TMax:30.6 Hum:66 Viento:9.25
+2026-04-15 16:30:13,802 - INFO - Villavicencio - Temp:28.57 TMin:28.57 TMax:28.57 Hum:89 Viento:1.94
+2026-04-15 16:30:14,175 - INFO - Pasto - Temp:14.34 TMin:14.34 TMax:14.34 Hum:96 Viento:1.53
+2026-04-15 16:30:14,555 - INFO - Cúcuta - Temp:27.16 TMin:27.16 TMax:27.16 Hum:65 Viento:0.6
+2026-04-15 16:30:14,964 - INFO - Armenia - Temp:21.29 TMin:21.29 TMax:21.29 Hum:87 Viento:0.62
+2026-04-15 16:30:15,329 - INFO - Pereira - Temp:20.76 TMin:20.76 TMax:20.76 Hum:86 Viento:0.8
+2026-04-15 16:30:15,755 - INFO - San Andrés - Temp:29.82 TMin:29.82 TMax:29.82 Hum:65 Viento:5.51
+2026-04-15 16:30:16,123 - INFO - Bucaramanga - Temp:24.72 TMin:24.72 TMax:24.72 Hum:78 Viento:1.19
+2026-04-15 16:30:16,525 - INFO - Sincelejo - Temp:26.9 TMin:26.9 TMax:26.9 Hum:69 Viento:6.06
+2026-04-15 16:30:16,912 - INFO - Ibagué - Temp:21.56 TMin:21.56 TMax:21.56 Hum:88 Viento:1.62
+2026-04-15 16:30:17,277 - INFO - Cali - Temp:23.8 TMin:23.8 TMax:23.8 Hum:84 Viento:1.84
+2026-04-15 16:30:17,651 - INFO - Mitú - Temp:25.75 TMin:25.75 TMax:25.75 Hum:81 Viento:1.2
+2026-04-15 16:30:18,025 - INFO - Puerto Carreño - Temp:33.62 TMin:33.62 TMax:33.62 Hum:53 Viento:0.68
+2026-04-15 16:30:18,034 - INFO - Datos guardados en CSV
+2026-04-15 16:30:18,039 - INFO - Total ciudades: 31
+2026-04-15 16:30:18,040 - INFO - Total alertas: 5
+2026-04-15 16:30:18,040 - INFO - Total errores: 0
+2026-04-15 16:30:18,040 - INFO - ===== FIN DEL PROCESO ETL =====
+2026-04-15 16:42:49,303 - INFO - ===== INICIO DEL PROCESO ETL =====
+2026-04-15 16:42:50,362 - INFO - Conectado a PostgreSQL
+2026-04-15 16:42:50,737 - INFO - Leticia - Temp:27.23 TMin:27.23 TMax:27.23 Hum:78 Viento:1.25
+2026-04-15 16:42:51,756 - INFO - Medellín - Temp:23.06 TMin:23.06 TMax:23.06 Hum:87 Viento:0.25
+2026-04-15 16:42:52,590 - INFO - Arauca - Temp:24.43 TMin:24.43 TMax:24.43 Hum:90 Viento:1.88
+2026-04-15 16:42:54,366 - INFO - Barranquilla - Temp:28.84 TMin:28.84 TMax:28.84 Hum:69 Viento:7.81
+2026-04-15 16:42:55,197 - INFO - Cartagena - Temp:27.91 TMin:27.91 TMax:27.91 Hum:76 Viento:9.7
+2026-04-15 16:42:56,035 - INFO - Tunja - Temp:12.21 TMin:12.21 TMax:12.21 Hum:93 Viento:1.11
+2026-04-15 16:42:57,082 - INFO - Manizales - Temp:19.72 TMin:19.72 TMax:19.72 Hum:90 Viento:0.46
+2026-04-15 16:42:58,022 - INFO - Florencia - Temp:25.74 TMin:25.74 TMax:25.74 Hum:85 Viento:0.46
+2026-04-15 16:42:58,947 - INFO - Yopal - Temp:24.46 TMin:24.46 TMax:24.46 Hum:88 Viento:0.63
+2026-04-15 16:42:59,844 - INFO - Popayán - Temp:17.66 TMin:17.66 TMax:17.66 Hum:97 Viento:0.98
+2026-04-15 16:43:00,877 - INFO - Valledupar - Temp:32.63 TMin:32.63 TMax:32.63 Hum:40 Viento:2.32
+2026-04-15 16:43:01,747 - INFO - Quibdó - Temp:30.9 TMin:30.9 TMax:30.9 Hum:91 Viento:0.88
+2026-04-15 16:43:02,785 - INFO - Montería - Temp:26.57 TMin:26.57 TMax:26.57 Hum:69 Viento:5.63
+2026-04-15 16:43:03,625 - INFO - Bogotá - Temp:14.97 TMin:14.97 TMax:14.97 Hum:89 Viento:0.84
+2026-04-15 16:43:04,497 - INFO - Inírida - Temp:26.44 TMin:26.44 TMax:26.44 Hum:91 Viento:1.58
+2026-04-15 16:43:05,524 - INFO - San José del Guaviare - Temp:25.94 TMin:25.94 TMax:25.94 Hum:88 Viento:1.74
+2026-04-15 16:43:06,376 - INFO - Neiva - Temp:25.41 TMin:25.41 TMax:25.41 Hum:81 Viento:0.13
+2026-04-15 16:43:07,228 - INFO - Riohacha - Temp:28.22 TMin:28.22 TMax:28.22 Hum:71 Viento:7.64
+2026-04-15 16:43:08,101 - INFO - Santa Marta - Temp:29.78 TMin:29.78 TMax:29.78 Hum:68 Viento:8.96
+2026-04-15 16:43:08,977 - INFO - Villavicencio - Temp:28.08 TMin:28.08 TMax:28.08 Hum:91 Viento:2.24
+2026-04-15 16:43:10,003 - INFO - Pasto - Temp:14.34 TMin:14.34 TMax:14.34 Hum:96 Viento:1.53
+2026-04-15 16:43:11,008 - INFO - Cúcuta - Temp:25.99 TMin:25.99 TMax:25.99 Hum:72 Viento:0.11
+2026-04-15 16:43:11,913 - INFO - Armenia - Temp:21.29 TMin:21.29 TMax:21.29 Hum:86 Viento:0.62
+2026-04-15 16:43:12,776 - INFO - Pereira - Temp:20.76 TMin:20.76 TMax:20.76 Hum:85 Viento:0.8
+2026-04-15 16:43:13,633 - INFO - San Andrés - Temp:29.83 TMin:29.83 TMax:29.83 Hum:64 Viento:5.51
+2026-04-15 16:43:14,505 - INFO - Bucaramanga - Temp:23.42 TMin:23.42 TMax:23.42 Hum:84 Viento:1.2
+2026-04-15 16:43:15,356 - INFO - Sincelejo - Temp:26.89 TMin:26.89 TMax:26.89 Hum:69 Viento:6.06
+2026-04-15 16:43:16,218 - INFO - Ibagué - Temp:21.15 TMin:21.15 TMax:21.15 Hum:92 Viento:1.07
+2026-04-15 16:43:17,237 - INFO - Cali - Temp:22.93 TMin:22.93 TMax:22.93 Hum:89 Viento:1.42
+2026-04-15 16:43:18,104 - INFO - Mitú - Temp:25.75 TMin:25.75 TMax:25.75 Hum:81 Viento:1.2
+2026-04-15 16:43:18,998 - INFO - Puerto Carreño - Temp:33.62 TMin:33.62 TMax:33.62 Hum:53 Viento:0.68
+2026-04-15 16:43:19,490 - INFO - Datos guardados en CSV
+2026-04-15 16:43:19,648 - INFO - Total ciudades: 31
+2026-04-15 16:43:19,649 - INFO - Total alertas: 7
+2026-04-15 16:43:19,649 - INFO - Total errores: 0
+2026-04-15 16:43:19,649 - INFO - ===== FIN DEL PROCESO ETL =====
