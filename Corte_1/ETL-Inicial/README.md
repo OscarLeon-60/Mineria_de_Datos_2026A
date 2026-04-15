@@ -92,8 +92,8 @@ etl-weatherstack/
 
 ## 👨‍💻 Autor
 
-Allan Zapata - Ingeniería de Sistemas - CORHUILA
-Oscar Leon   - Ingeniería de Sistemas - CORHUILA
+- Allan Zapata - Ingeniería de Sistemas - CORHUILA
+- Oscar Leon   - Ingeniería de Sistemas - CORHUILA
 
 ## 📝 Licencia
 
