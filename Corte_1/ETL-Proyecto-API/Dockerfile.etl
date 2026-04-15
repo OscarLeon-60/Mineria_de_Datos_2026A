@@ -1,0 +1,29 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY etl/ ./etl/
+COPY data/ ./data/
+COPY logs/ ./logs/
+COPY .env .
+
+# Scheduler: corre el extractor cada hora
+CMD ["python", "-c", "
+import schedule, time, subprocess, logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+
+def run_etl():
+    logging.info('Ejecutando ETL...')
+    subprocess.run(['python', 'etl/extractor.py'], check=True)
+
+run_etl()  # Ejecucion inmediata al arrancar
+schedule.every(1).hours.do(run_etl)
+
+while True:
+    schedule.run_pending()
+    time.sleep(60)
+"]
