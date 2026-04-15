@@ -1,43 +1,43 @@
-# Análisis Climático de Colombia
+# 🌤️ Análisis Climático de Colombia
 
-Proyecto ETL para monitorear, almacenar y visualizar datos climáticos en tiempo real de varias ciudades colombianas desde OpenWeather. Este sistema está diseñado para capturar información de ciudades y departamentos de Colombia, guardarla en PostgreSQL, generar alertas climáticas y ofrecer un dashboard interactivo con análisis y modelos de predicción.
+Bienvenido al proyecto de monitoreo climático para ciudades y departamentos de Colombia. Aquí se recopilan datos en tiempo real desde OpenWeather, se almacenan en PostgreSQL y se exploran con un dashboard interactivo.
 
-## Objetivo
+## 🎯 Objetivo
 
-Construir un flujo de datos confiable que permita:
-- Extraer datos meteorológicos de ciudades colombianas cada hora.
-- Transformar y normalizar la información en un esquema de base de datos relacional.
-- Cargar mediciones en PostgreSQL con registro histórico.
-- Visualizar patrones de temperatura, humedad y viento en un dashboard Streamlit.
-- Evaluar tendencias de temperatura usando regresión lineal.
+Construir un sistema ETL sólido que permita:
+- Extraer datos meteorológicos de varias ciudades colombianas cada hora.
+- Transformar y normalizar la información para una base de datos relacional.
+- Guardar mediciones históricas en PostgreSQL.
+- Visualizar tendencias de temperatura, humedad y viento en un dashboard Streamlit.
+- Analizar patrones y posibles anomalías climáticas.
 
-## Qué se incluye
+## 📦 Qué incluye este proyecto
 
-- `etl/extractor.py`: script Python que consulta la API de OpenWeather, procesa los datos y guarda ciudades + mediciones en PostgreSQL.
-- `etl/schema.sql`: definición de tablas para `ciudades`, `mediciones` y `alertas_climaticas`.
-- `Dockerfile.etl`: construcción de la imagen para el servicio ETL.
-- `Dockerfile.dashboard`: construcción de la imagen para el dashboard Streamlit.
-- `docker-compose.yml`: orquestación de servicios PostgreSQL, ETL y dashboard.
-- `dashboard/`: carpeta con el código del dashboard Streamlit.
-- `data/`: volumen local opcional para datos intermedios.
+- `etl/extractor.py`: script Python que consulta OpenWeather y guarda ciudades + mediciones en PostgreSQL.
+- `etl/schema.sql`: esquema de base de datos para `ciudades`, `mediciones` y `alertas_climaticas`.
+- `Dockerfile.etl`: imagen para el servicio ETL.
+- `Dockerfile.dashboard`: imagen para el dashboard Streamlit.
+- `docker-compose.yml`: orquesta PostgreSQL, ETL y dashboard.
+- `dashboard/`: código del dashboard.
+- `data/`: datos intermedios opcionales.
 - `logs/`: registros de ejecución del extractor.
-- `requirements.txt`: dependencias Python necesarias.
+- `requirements.txt`: dependencias necesarias.
 
-## Arquitectura de la solución
+## 🧠 Arquitectura de la solución
 
-1. `POSTGRESQL` en Docker: almacena información de ciudades, mediciones históricas y alertas.
-2. `ETL` en Docker: ejecuta el extractor, consume OpenWeather y persiste los datos.
-3. `Dashboard` en Docker: visualiza los datos desde PostgreSQL a través de Streamlit.
+1. **PostgreSQL** en Docker: persiste ciudades, mediciones y alertas.
+2. **ETL**: extrae datos de OpenWeather y los carga en la base.
+3. **Dashboard**: visualiza los datos desde PostgreSQL con Streamlit.
 
-## Estructura de la base de datos
+## 🗄️ Estructura de la base de datos
 
-- `ciudades`: registros únicos de cada ciudad con nombre, país, coordenadas y departamento.
-- `mediciones`: histórico de observaciones por ciudad con temperatura, humedad, viento y descripción.
-- `alertas_climaticas`: eventos generados cuando se detectan condiciones críticas o anomalías.
+- `ciudades`: almacena cada ciudad con nombre, departamento, país y coordenadas.
+- `mediciones`: historial de observaciones climáticas por ciudad.
+- `alertas_climaticas`: registra eventos cuando se detectan condiciones inusuales.
 
-## Setup local
+## 🚀 Setup local
 
-1. Crear archivo `.env` en la raíz con las variables:
+1. Crear el archivo `.env` en la raíz con:
 ```text
 OPENWEATHER_API_KEY=tu_api_key
 DB_NAME=clima_db
@@ -53,36 +53,41 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Levantar la base de datos y servicios con Docker Compose:
+3. Levantar PostgreSQL con Docker Compose:
 ```bash
 docker compose up -d postgres
 ```
 
-4. Ejecutar el extractor localmente:
+4. Ejecutar el extractor:
 ```bash
 python etl/extractor.py
 ```
 
-5. Verificar resultados:
-- `SELECT * FROM ciudades LIMIT 10;`
-- `SELECT * FROM mediciones ORDER BY fecha_consulta DESC LIMIT 10;`
+5. Verificar que los datos llegaron a la base:
+```sql
+SELECT * FROM ciudades LIMIT 10;
+SELECT * FROM mediciones ORDER BY fecha_consulta DESC LIMIT 10;
+```
 
-## Cómo evoluciona el proyecto
+## 🌆 Enfoque del proyecto
 
-A partir de esta base puedes ampliar el sistema con:
-- cobertura de más ciudades y departamentos de Colombia
-- generador de alertas por extremos de temperatura, humedad o velocidad de viento
-- dashboard con mapas interactivos y series de tiempo
-- modelo de regresión lineal para predecir temperatura máxima y mínima
-- informes y presentación para mostrar hallazgos y recomendaciones
+Este proyecto está centrado en el análisis climático de **ciudades y departamentos de Colombia**. El objetivo es mostrar cómo se puede seguir el clima en tiempo real y analizar variaciones dentro del país.
 
-## Sugerencias de análisis
+## 📊 Posibles ampliaciones
 
-- detectar anomalías climáticas por ciudad
-- comparar patrones estacionales
-- predecir temperatura máxima y mínima
-- analizar correlación entre temperatura, humedad y viento
+- Más ciudades y departamentos de Colombia.
+- Alertas por picos de temperatura, humedad o viento.
+- Dashboard con gráficos de tendencia y mapas.
+- Modelos de regresión lineal para predecir temperatura mínima y máxima.
+- Informe final con hallazgos y recomendaciones.
 
-## Nota
+## 💡 Ideas de análisis
 
-El extractor está configurado para consultar datos de varias ciudades y departamentos de Colombia. Para ampliar el análisis, ajusta la lista de `CITIES` en `etl/extractor.py` con más ciudades colombianas según lo necesario.
+- Detectar anomalías climáticas por ciudad.
+- Comparar patrones de clima entre departamentos.
+- Predecir temperatura máxima y mínima.
+- Analizar correlaciones entre temperatura, humedad y viento.
+
+## ✅ Nota final
+
+El proyecto ya está configurado para trabajar con ciudades colombianas. Si deseas sumar más municipios, solo modifica la lista `CITIES` en `etl/extractor.py` con nuevas entradas dentro de Colombia.
