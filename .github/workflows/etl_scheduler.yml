@@ -10,8 +10,8 @@ on:
       - main
       - dev_oscar
   schedule:
-    - cron: '*/5 * * * *'  # Cada 5 minutos
-  workflow_dispatch:       # También manual desde GitHub
+    - cron: '*/20 * * * *'  # Cada 20 minutos
+  workflow_dispatch:        # También manual desde GitHub
 
 jobs:
   run-etl:
