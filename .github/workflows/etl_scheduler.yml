@@ -9,7 +9,7 @@ on:
     branches:
       - dev-oscar
   schedule:
-    - cron: '0 * * * *'  # Cada hora
+    - cron: '*/5 * * * *'  # Cada 5 minutos
   workflow_dispatch:       # También manual desde GitHub
 
 jobs:
