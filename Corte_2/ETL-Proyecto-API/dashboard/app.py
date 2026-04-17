@@ -236,17 +236,6 @@ def get_engine():
         port     = os.getenv("DB_PORT", "5432")
     return create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}")
 
-
-def localize_to_bogota(df, columns):
-    for col in columns:
-        if col in df.columns:
-            df[col] = pd.to_datetime(df[col], errors="coerce")
-            if df[col].dt.tz is None:
-                df[col] = df[col].dt.tz_localize("America/Bogota")
-            else:
-                df[col] = df[col].dt.tz_convert("America/Bogota")
-    return df
-
 @st.cache_data(ttl=300)
 def load_data():
     engine = get_engine()
@@ -263,8 +252,7 @@ def load_data():
         JOIN ciudades c ON m.ciudad_id = c.id
         ORDER BY m.fecha_consulta DESC
     """
-    df = pd.read_sql(query, engine)
-    return localize_to_bogota(df, ["fecha_consulta"])
+    return pd.read_sql(query, engine)
 
 
 @st.cache_data(ttl=300)
@@ -277,8 +265,7 @@ def load_alertas():
         ORDER BY a.fecha DESC
         LIMIT 100
     """
-    df = pd.read_sql(query, engine)
-    return localize_to_bogota(df, ["fecha"])
+    return pd.read_sql(query, engine)
 
 
 @st.cache_data(ttl=300)
@@ -296,8 +283,7 @@ def load_ultima_medicion():
         JOIN ciudades c ON m.ciudad_id = c.id
         ORDER BY c.id, m.fecha_consulta DESC
     """
-    df = pd.read_sql(query, engine)
-    return localize_to_bogota(df, ["fecha_consulta"])
+    return pd.read_sql(query, engine)
 
 
 # ==============================
