@@ -4,12 +4,12 @@ name: ETL Climatico Colombia
 on:
   push:
     branches:
-      - dev_oscar
       - main
+      - dev_oscar
   pull_request:
     branches:
-      - dev_oscar
       - main
+      - dev_oscar
   schedule:
     - cron: '* * * * *'  # Cada minuto
   workflow_dispatch:       # También manual desde GitHub
