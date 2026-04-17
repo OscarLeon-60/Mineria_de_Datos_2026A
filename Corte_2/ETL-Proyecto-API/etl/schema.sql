@@ -1,5 +1,6 @@
 -- ==============================
 -- SCHEMA: Análisis Climático Colombia
+-- Timezone: America/Bogota (UTC-5)
 -- ==============================
 
 -- CIUDADES
@@ -17,7 +18,7 @@ CREATE TABLE IF NOT EXISTS ciudades (
 CREATE TABLE IF NOT EXISTS mediciones (
     id                 SERIAL PRIMARY KEY,
     ciudad_id          INTEGER NOT NULL REFERENCES ciudades(id) ON DELETE CASCADE,
-    fecha_consulta     TIMESTAMP NOT NULL DEFAULT NOW(),
+    fecha_consulta     TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
     temperatura        FLOAT,
     temp_min           FLOAT,
     temp_max           FLOAT,
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS mediciones (
 CREATE TABLE IF NOT EXISTS alertas_climaticas (
     id           SERIAL PRIMARY KEY,
     ciudad_id    INTEGER NOT NULL REFERENCES ciudades(id) ON DELETE CASCADE,
-    fecha        TIMESTAMP NOT NULL DEFAULT NOW(),
+    fecha        TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
     tipo_alerta  VARCHAR(100) NOT NULL,
     descripcion  TEXT
 );
