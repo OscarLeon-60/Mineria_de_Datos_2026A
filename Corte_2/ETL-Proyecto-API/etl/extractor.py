@@ -4,6 +4,7 @@ import pandas as pd
 import logging
 import psycopg2
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
 
 # ==============================
@@ -25,7 +26,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
 DB_CONFIG = {
-    "host":     os.getenv("DB_HOST", "localhost"),   # "postgres" en Docker, "localhost" en local
+    "host":     os.getenv("DB_HOST", "localhost"),
     "database": os.getenv("DB_NAME", "clima_db"),
     "user":     os.getenv("DB_USER", "clima_user"),
     "password": os.getenv("DB_PASSWORD", "clima1234"),
@@ -43,49 +44,39 @@ logging.basicConfig(
 print("🚀 INICIANDO PROCESO ETL")
 logging.info("===== INICIO DEL PROCESO ETL =====")
 
-# ==============================
-# CIUDADES
-# Formato: (nombre_api, departamento, display_name)
-# nombre_api: solo "Ciudad,CO" — OpenWeather no acepta departamento
-# ==============================
-
 CITIES = [
-    ("Leticia,CO",          "Amazonas",                    "Leticia"),
-    ("Medellin,CO",         "Antioquia",                   "Medellín"),
-    ("Arauca,CO",           "Arauca",                      "Arauca"),
-    ("Barranquilla,CO",     "Atlántico",                   "Barranquilla"),
-    ("Cartagena,CO",        "Bolívar",                     "Cartagena"),
-    ("Tunja,CO",            "Boyacá",                      "Tunja"),
-    ("Manizales,CO",        "Caldas",                      "Manizales"),
-    ("Florencia,CO",        "Caquetá",                     "Florencia"),
-    ("Yopal,CO",            "Casanare",                    "Yopal"),
-    ("Popayan,CO",          "Cauca",                       "Popayán"),
-    ("Valledupar,CO",       "Cesar",                       "Valledupar"),
-    ("Quibdo,CO",           "Chocó",                       "Quibdó"),
-    ("Monteria,CO",         "Córdoba",                     "Montería"),
-    ("Bogota,CO",           "Cundinamarca",                "Bogotá"),
-    ("Inirida,CO",          "Guainía",                     "Inírida"),
-    ("San Jose del Guaviare,CO", "Guaviare",               "San José del Guaviare"),
-    ("Neiva,CO",            "Huila",                       "Neiva"),
-    ("Riohacha,CO",         "La Guajira",                  "Riohacha"),
-    ("Santa Marta,CO",      "Magdalena",                   "Santa Marta"),
-    ("Villavicencio,CO",    "Meta",                        "Villavicencio"),
-    ("Pasto,CO",            "Nariño",                      "Pasto"),
-    ("Cucuta,CO",           "Norte de Santander",          "Cúcuta"),
-    ("Armenia,CO",          "Quindío",                     "Armenia"),
-    ("Pereira,CO",          "Risaralda",                   "Pereira"),
-    ("San Andres,CO",       "San Andrés y Providencia",    "San Andrés"),
-    ("Bucaramanga,CO",      "Santander",                   "Bucaramanga"),
-    ("Sincelejo,CO",        "Sucre",                       "Sincelejo"),
-    ("Ibague,CO",           "Tolima",                      "Ibagué"),
-    ("Cali,CO",             "Valle del Cauca",             "Cali"),
-    ("Mitu,CO",             "Vaupés",                      "Mitú"),
-    ("Puerto Carreno,CO",   "Vichada",                     "Puerto Carreño"),
+    ("Leticia,CO",               "Amazonas",                 "Leticia"),
+    ("Medellin,CO",              "Antioquia",                "Medellín"),
+    ("Arauca,CO",                "Arauca",                   "Arauca"),
+    ("Barranquilla,CO",          "Atlántico",                "Barranquilla"),
+    ("Cartagena,CO",             "Bolívar",                  "Cartagena"),
+    ("Tunja,CO",                 "Boyacá",                   "Tunja"),
+    ("Manizales,CO",             "Caldas",                   "Manizales"),
+    ("Florencia,CO",             "Caquetá",                  "Florencia"),
+    ("Yopal,CO",                 "Casanare",                 "Yopal"),
+    ("Popayan,CO",               "Cauca",                    "Popayán"),
+    ("Valledupar,CO",            "Cesar",                    "Valledupar"),
+    ("Quibdo,CO",                "Chocó",                    "Quibdó"),
+    ("Monteria,CO",              "Córdoba",                  "Montería"),
+    ("Bogota,CO",                "Cundinamarca",             "Bogotá"),
+    ("Inirida,CO",               "Guainía",                  "Inírida"),
+    ("San Jose del Guaviare,CO", "Guaviare",                 "San José del Guaviare"),
+    ("Neiva,CO",                 "Huila",                    "Neiva"),
+    ("Riohacha,CO",              "La Guajira",               "Riohacha"),
+    ("Santa Marta,CO",           "Magdalena",                "Santa Marta"),
+    ("Villavicencio,CO",         "Meta",                     "Villavicencio"),
+    ("Pasto,CO",                 "Nariño",                   "Pasto"),
+    ("Cucuta,CO",                "Norte de Santander",       "Cúcuta"),
+    ("Armenia,CO",               "Quindío",                  "Armenia"),
+    ("Pereira,CO",               "Risaralda",                "Pereira"),
+    ("San Andres,CO",            "San Andrés y Providencia", "San Andrés"),
+    ("Bucaramanga,CO",           "Santander",                "Bucaramanga"),
+    ("Sincelejo,CO",             "Sucre",                    "Sincelejo"),
+    ("Ibague,CO",                "Tolima",                   "Ibagué"),
+    ("Cali,CO",                  "Valle del Cauca",          "Cali"),
+    ("Mitu,CO",                  "Vaupés",                   "Mitú"),
+    ("Puerto Carreno,CO",        "Vichada",                  "Puerto Carreño"),
 ]
-
-# ==============================
-# CONEXIÓN A POSTGRESQL
-# ==============================
 
 try:
     conexion = psycopg2.connect(**DB_CONFIG)
@@ -97,18 +88,10 @@ except Exception as e:
     logging.critical(f"Fallo conexión BD: {e}")
     exit(1)
 
-# ==============================
-# CONTADORES
-# ==============================
-
-data_list            = []
-ciudades_procesadas  = 0
-alertas_generadas    = 0
-errores              = 0
-
-# ==============================
-# EXTRACCIÓN
-# ==============================
+data_list           = []
+ciudades_procesadas = 0
+alertas_generadas   = 0
+errores             = 0
 
 for city_api, departamento, display_name in CITIES:
     try:
@@ -121,45 +104,45 @@ for city_api, departamento, display_name in CITIES:
         if response.status_code == 200:
             data = response.json()
 
-            nombre_ciudad   = data["name"]
-            temperatura     = data["main"]["temp"]
-            temp_min        = data["main"]["temp_min"]
-            temp_max        = data["main"]["temp_max"]
-            sensacion       = data["main"]["feels_like"]
-            humedad         = data["main"]["humidity"]
-            presion         = data["main"]["pressure"]
-            viento          = data["wind"]["speed"]
-            dir_viento      = data["wind"].get("deg", 0)
-            descripcion     = data["weather"][0]["description"]
-            nubosidad       = data["clouds"]["all"]
-            latitud         = data["coord"]["lat"]
-            longitud        = data["coord"]["lon"]
-            fecha_consulta  = datetime.now()
+            nombre_ciudad  = data["name"]
+            temperatura    = data["main"]["temp"]
+            temp_min       = data["main"]["temp_min"]
+            temp_max       = data["main"]["temp_max"]
+            sensacion      = data["main"]["feels_like"]
+            humedad        = data["main"]["humidity"]
+            presion        = data["main"]["pressure"]
+            viento         = data["wind"]["speed"]
+            dir_viento     = data["wind"].get("deg", 0)
+            descripcion    = data["weather"][0]["description"]
+            nubosidad      = data["clouds"]["all"]
+            latitud        = data["coord"]["lat"]
+            longitud       = data["coord"]["lon"]
 
-            print(f"✔ {display_name:<30} | {temperatura:>5.1f}°C | Humedad: {humedad}% | Viento: {viento} m/s")
+            # ✅ Fecha en hora Colombia (UTC-5) sin timezone info para BD
+            fecha_consulta = datetime.now(tz=ZoneInfo("America/Bogota")).replace(tzinfo=None)
+
+            print(f"✔ {display_name:<30} | {temperatura:>5.1f}°C | Humedad: {humedad}% | Viento: {viento} m/s | {fecha_consulta:%Y-%m-%d %H:%M:%S}")
             logging.info(f"{display_name} - Temp:{temperatura} TMin:{temp_min} TMax:{temp_max} Hum:{humedad} Viento:{viento}")
 
-            # ---- CSV ----
             data_list.append({
-                "fecha_consulta":   fecha_consulta,
-                "ciudad":           nombre_ciudad,
-                "departamento":     departamento,
-                "pais":             "Colombia",
-                "latitud":          latitud,
-                "longitud":         longitud,
-                "temperatura":      temperatura,
-                "temp_min":         temp_min,
-                "temp_max":         temp_max,
-                "sensacion_termica":sensacion,
-                "humedad":          humedad,
-                "presion":          presion,
-                "velocidad_viento": viento,
-                "direccion_viento": dir_viento,
-                "descripcion":      descripcion,
-                "nubosidad":        nubosidad,
+                "fecha_consulta":    fecha_consulta,
+                "ciudad":            nombre_ciudad,
+                "departamento":      departamento,
+                "pais":              "Colombia",
+                "latitud":           latitud,
+                "longitud":          longitud,
+                "temperatura":       temperatura,
+                "temp_min":          temp_min,
+                "temp_max":          temp_max,
+                "sensacion_termica": sensacion,
+                "humedad":           humedad,
+                "presion":           presion,
+                "velocidad_viento":  viento,
+                "direccion_viento":  dir_viento,
+                "descripcion":       descripcion,
+                "nubosidad":         nubosidad,
             })
 
-            # ---- UPSERT CIUDAD ----
             cursor.execute(
                 "SELECT id FROM ciudades WHERE nombre = %s AND departamento = %s",
                 (nombre_ciudad, departamento)
@@ -179,7 +162,6 @@ for city_api, departamento, display_name in CITIES:
                 )
                 ciudad_id = cursor.fetchone()[0]
 
-            # ---- MEDICIÓN ----
             cursor.execute(
                 """
                 INSERT INTO mediciones (
@@ -200,52 +182,35 @@ for city_api, departamento, display_name in CITIES:
                 )
             )
 
-            # ---- ALERTAS ----
             if temperatura > 35:
                 print(f"   🔥 ALERTA: Calor extremo en {display_name} ({temperatura}°C)")
                 cursor.execute(
-                    """
-                    INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion)
-                    VALUES (%s, %s, %s, %s)
-                    """,
-                    (ciudad_id, fecha_consulta, "Alta Temperatura",
-                     f"Temperatura extrema: {temperatura}°C")
+                    "INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion) VALUES (%s, %s, %s, %s)",
+                    (ciudad_id, fecha_consulta, "Alta Temperatura", f"Temperatura extrema: {temperatura}°C")
                 )
                 alertas_generadas += 1
 
             if temperatura < 5:
                 print(f"   🧊 ALERTA: Frío extremo en {display_name} ({temperatura}°C)")
                 cursor.execute(
-                    """
-                    INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion)
-                    VALUES (%s, %s, %s, %s)
-                    """,
-                    (ciudad_id, fecha_consulta, "Baja Temperatura",
-                     f"Temperatura muy baja: {temperatura}°C")
+                    "INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion) VALUES (%s, %s, %s, %s)",
+                    (ciudad_id, fecha_consulta, "Baja Temperatura", f"Temperatura muy baja: {temperatura}°C")
                 )
                 alertas_generadas += 1
 
             if humedad > 90:
                 print(f"   💧 ALERTA: Humedad alta en {display_name} ({humedad}%)")
                 cursor.execute(
-                    """
-                    INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion)
-                    VALUES (%s, %s, %s, %s)
-                    """,
-                    (ciudad_id, fecha_consulta, "Alta Humedad",
-                     f"Humedad extrema: {humedad}%")
+                    "INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion) VALUES (%s, %s, %s, %s)",
+                    (ciudad_id, fecha_consulta, "Alta Humedad", f"Humedad extrema: {humedad}%")
                 )
                 alertas_generadas += 1
 
             if viento > 15:
                 print(f"   🌬️  ALERTA: Viento fuerte en {display_name} ({viento} m/s)")
                 cursor.execute(
-                    """
-                    INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion)
-                    VALUES (%s, %s, %s, %s)
-                    """,
-                    (ciudad_id, fecha_consulta, "Viento Fuerte",
-                     f"Velocidad de viento: {viento} m/s")
+                    "INSERT INTO alertas_climaticas (ciudad_id, fecha, tipo_alerta, descripcion) VALUES (%s, %s, %s, %s)",
+                    (ciudad_id, fecha_consulta, "Viento Fuerte", f"Velocidad de viento: {viento} m/s")
                 )
                 alertas_generadas += 1
 
@@ -268,10 +233,6 @@ for city_api, departamento, display_name in CITIES:
         logging.error(f"Error en {city_api}: {e}")
         errores += 1
 
-# ==============================
-# GUARDAR CSV
-# ==============================
-
 df = pd.DataFrame(data_list)
 output_path = os.path.join(DATA_DIR, "clima_colombia.csv")
 
@@ -284,10 +245,6 @@ if not df.empty:
     logging.info("Datos guardados en CSV")
 else:
     print("\n⚠ No hay datos para guardar en CSV")
-
-# ==============================
-# CIERRE
-# ==============================
 
 conexion.commit()
 cursor.close()
