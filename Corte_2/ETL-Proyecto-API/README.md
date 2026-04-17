@@ -1,97 +1,284 @@
 # 🌤️ Análisis Climático de Colombia
+> Sistema ETL automatizado para monitoreo climático en tiempo real de las 31 capitales departamentales de Colombia, con dashboard interactivo, modelo de regresión lineal y despliegue en la nube.
 
-Bienvenido al proyecto de monitoreo climático para ciudades y departamentos de Colombia. Aquí se recopilan datos en tiempo real desde OpenWeather, se almacenan en PostgreSQL y se exploran con un dashboard interactivo.
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://mineriadedatos2026a-e8anvqzyxjnfbdb45z5vdn.streamlit.app/)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-Automatizado-green)
+
+---
 
 ## 🎯 Objetivo
-
 Construir un sistema ETL sólido que permita:
-- Extraer datos meteorológicos de varias ciudades colombianas cada hora.
+- Extraer datos meteorológicos de las 31 capitales colombianas cada 5 minutos de forma automatizada.
 - Transformar y normalizar la información para una base de datos relacional.
-- Guardar mediciones históricas en PostgreSQL.
-- Visualizar tendencias de temperatura, humedad y viento en un dashboard Streamlit.
-- Analizar patrones y posibles anomalías climáticas.
+- Guardar mediciones históricas en PostgreSQL (Supabase).
+- Visualizar tendencias de temperatura, humedad y viento en un dashboard Streamlit interactivo.
+- Detectar anomalías climáticas y generar alertas automáticas.
+- Predecir la temperatura máxima usando modelos de regresión lineal simple y múltiple.
 
-## 📦 Qué incluye este proyecto
+---
 
-- `etl/extractor.py`: script Python que consulta OpenWeather y guarda ciudades + mediciones en PostgreSQL.
-- `etl/schema.sql`: esquema de base de datos para `ciudades`, `mediciones` y `alertas_climaticas`.
-- `Dockerfile.etl`: imagen para el servicio ETL.
-- `Dockerfile.dashboard`: imagen para el dashboard Streamlit.
-- `docker-compose.yml`: orquesta PostgreSQL, ETL y dashboard.
-- `dashboard/`: código del dashboard.
-- `data/`: datos intermedios opcionales.
-- `logs/`: registros de ejecución del extractor.
-- `requirements.txt`: dependencias necesarias.
+## 🧠 Arquitectura de la Solución
 
-## 🧠 Arquitectura de la solución
+```
+OpenWeatherMap API
+        ↓
+  extractor.py (ETL)
+        ↓
+  GitHub Actions (cada 5 min)
+        ↓
+  Supabase PostgreSQL (nube)
+        ↓
+  Streamlit Cloud (dashboard)
+```
 
-1. **PostgreSQL** en Docker: persiste ciudades, mediciones y alertas.
-2. **ETL**: extrae datos de OpenWeather y los carga en la base.
-3. **Dashboard**: visualiza los datos desde PostgreSQL con Streamlit.
+**Flujo completo:**
+1. GitHub Actions ejecuta `extractor.py` cada 5 minutos automáticamente
+2. El extractor llama a la API de OpenWeatherMap para las 31 capitales
+3. Los datos se limpian, transforman y cargan en Supabase (PostgreSQL)
+4. El dashboard de Streamlit Cloud lee los datos y los visualiza en tiempo real
+5. Docker Compose permite correr todo el sistema localmente con un solo comando
 
-## � Despliegue y herramientas
+---
 
-En esta etapa trabajamos con **Supabase** como plataforma de backend y **Streamlit** para desplegar el dashboard. Supabase permite gestionar la base de datos PostgreSQL y almacenar datos en la nube, mientras que Streamlit ofrece una interfaz de visualización rápida y profesional.
+## 📦 Estructura del Proyecto
 
-## �🗄️ Estructura de la base de datos
+```
+ETL-Proyecto-API/
+├── .github/
+│   └── workflows/
+│       └── etl_scheduler.yml     # GitHub Actions — ETL automático cada 5 min
+├── dashboard/
+│   └── app.py                    # Dashboard Streamlit con 6 pestañas
+├── etl/
+│   ├── extractor.py              # Script ETL principal
+│   └── schema.sql                # Esquema de la base de datos
+├── notebooks/
+│   └── analisis_climatico_ml.ipynb  # Análisis ML con regresión lineal
+├── data/                         # Datos intermedios y CSV exportados
+├── logs/                         # Registros de ejecución del ETL
+├── ml/                           # Modelos entrenados (.pkl)
+├── Dockerfile.etl                # Imagen Docker para el ETL
+├── Dockerfile.dashboard          # Imagen Docker para el dashboard
+├── docker-compose.yml            # Orquestación de servicios
+├── scheduler.py                  # Scheduler local (sin Docker)
+├── requirements.txt              # Dependencias Python
+└── .env                          # Variables de entorno (no subir a Git)
+```
 
-- `ciudades`: almacena cada ciudad con nombre, departamento, país y coordenadas.
-- `mediciones`: historial de observaciones climáticas por ciudad.
-- `alertas_climaticas`: registra eventos cuando se detectan condiciones inusuales.
+---
 
-## 🚀 Setup local
+## 🗄️ Base de Datos
 
-1. Crear el archivo `.env` en la raíz con:
-```text
+### Tablas
+
+| Tabla | Descripción |
+|---|---|
+| `ciudades` | Nombre, departamento, país, latitud y longitud de cada capital |
+| `mediciones` | Historial de observaciones climáticas por ciudad cada 5 minutos |
+| `alertas_climaticas` | Eventos cuando se detectan condiciones extremas |
+
+### Variables climáticas almacenadas
+`temperatura`, `temp_min`, `temp_max`, `sensacion_termica`, `humedad`, `presion`, `velocidad_viento`, `direccion_viento`, `descripcion`, `nubosidad`
+
+### Alertas automáticas
+- 🔥 **Calor extremo**: temperatura > 35°C
+- 🧊 **Frío extremo**: temperatura < 5°C
+- 💧 **Humedad alta**: humedad > 90%
+- 🌬️ **Viento fuerte**: velocidad > 15 m/s
+
+---
+
+## 📊 Dashboard
+
+**URL:** https://mineriadedatos2026a-yqzsgkv8rhyyavuayccwfv.streamlit.app/
+
+| Pestaña | Contenido |
+|---|---|
+| 🗺️ Mapa en Vivo | Mapa interactivo de Colombia con temperatura, humedad o viento |
+| 📈 Tendencias | Evolución temporal de variables climáticas por ciudad |
+| 🔬 Análisis | Matriz de correlación, boxplot, scatter, radar chart |
+| ⚠️ Alertas | Centro de alertas con distribución y ranking por ciudad |
+| 📋 Datos Crudos | Tabla filtrable con descarga CSV |
+| 🤖 Regresión Lineal | Modelos Simple y Múltiple con gráficas y conclusiones automáticas |
+
+---
+
+## 🤖 Modelos de Machine Learning
+
+### Regresión Lineal Simple
+- **Variable predictora:** temperatura actual
+- **Variable objetivo:** temp_max
+- **Ecuación:** `temp_max = β₀ + β₁ × temperatura`
+- **R² obtenido:** ~0.9995 (99.95% varianza explicada)
+- **MAE:** ~0.12°C
+
+### Regresión Lineal Múltiple
+- **Variables predictoras:** temperatura, sensación térmica, humedad, presión, velocidad del viento, nubosidad, latitud
+- **Variable objetivo:** temp_max
+- **R² obtenido:** ~0.9925
+
+### Métricas de evaluación
+| Métrica | Descripción |
+|---|---|
+| R² | Coeficiente de determinación — % de varianza explicada |
+| MAE | Error Absoluto Medio en °C |
+| RMSE | Raíz del Error Cuadrático Medio en °C |
+
+> ⚠️ **Nota:** Se detectó y corrigió data leakage al eliminar `temp_min` y `rango_termico` que derivaban matemáticamente de `temp_max`.
+
+---
+
+## 🚀 Setup Local
+
+### Requisitos previos
+- Python 3.12+
+- Docker Desktop
+- Git
+
+### Paso 1 — Clonar el repositorio
+```bash
+git clone https://github.com/OscarLeon-60/Mineria_de_Datos_2026A.git
+cd Mineria_de_Datos_2026A/Corte_2/ETL-Proyecto-API
+```
+
+### Paso 2 — Crear el archivo `.env`
+```env
 OPENWEATHER_API_KEY=tu_api_key
+DB_HOST=localhost
 DB_NAME=clima_db
 DB_USER=clima_user
 DB_PASSWORD=clima1234
 DB_PORT=5432
 ```
 
-2. Crear entorno virtual e instalar dependencias:
+### Paso 3 — Crear entorno virtual e instalar dependencias
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Levantar PostgreSQL con Docker Compose:
+### Paso 4 — Levantar con Docker Compose
 ```bash
-docker compose up -d postgres
+docker compose up --build
+```
+Esto levanta PostgreSQL, crea las tablas automáticamente, ejecuta el ETL y lanza el dashboard en `http://localhost:8501`
+
+### Paso 5 — O ejecutar manualmente sin Docker
+```bash
+# Iniciar PostgreSQL local
+sudo service postgresql start
+
+# Crear tablas
+psql -U clima_user -d clima_db -h localhost -p 5434 -f etl/schema.sql
+
+# Ejecutar ETL una vez
+python3 etl/extractor.py
+
+# Ejecutar ETL cada hora automáticamente
+python3 scheduler.py
+
+# Lanzar dashboard
+streamlit run dashboard/app.py
 ```
 
-4. Ejecutar el extractor:
-```bash
-python etl/extractor.py
-```
-
-5. Verificar que los datos llegaron a la base:
+### Paso 6 — Verificar datos en la BD
 ```sql
 SELECT * FROM ciudades LIMIT 10;
 SELECT * FROM mediciones ORDER BY fecha_consulta DESC LIMIT 10;
+SELECT * FROM alertas_climaticas ORDER BY fecha DESC LIMIT 10;
 ```
 
-## 🌆 Enfoque del proyecto
+---
 
-Este proyecto está centrado en el análisis climático de **ciudades y departamentos de Colombia**. El objetivo es mostrar cómo se puede seguir el clima en tiempo real y analizar variaciones dentro del país.
+## ☁️ Despliegue en la Nube
 
-## 📊 Posibles ampliaciones
+| Servicio | Plataforma | URL |
+|---|---|---|
+| Base de datos | Supabase (PostgreSQL) | aws-1-us-west-2.pooler.supabase.com |
+| Dashboard | Streamlit Cloud | Ver badge arriba |
+| ETL automatizado | GitHub Actions | Cada 5 minutos |
 
-- Más ciudades y departamentos de Colombia.
-- Alertas por picos de temperatura, humedad o viento.
-- Dashboard con gráficos de tendencia y mapas.
-- Modelos de regresión lineal para predecir temperatura mínima y máxima.
-- Informe final con hallazgos y recomendaciones.
+### Configurar secrets en GitHub Actions
+Ve a **Settings → Secrets → Actions** y agrega:
+```
+OPENWEATHER_API_KEY
+DB_HOST
+DB_PORT
+DB_NAME
+DB_USER
+DB_PASSWORD
+```
 
-## 💡 Ideas de análisis
+### Configurar secrets en Streamlit Cloud
+Ve a **Settings → Secrets** y agrega:
+```toml
+OPENWEATHER_API_KEY = "tu_api_key"
+DB_HOST = "tu_host_supabase"
+DB_PORT = "6543"
+DB_NAME = "postgres"
+DB_USER = "postgres.tu_usuario"
+DB_PASSWORD = "tu_password"
+```
 
-- Detectar anomalías climáticas por ciudad.
-- Comparar patrones de clima entre departamentos.
-- Predecir temperatura máxima y mínima.
-- Analizar correlaciones entre temperatura, humedad y viento.
+---
 
-## ✅ Nota final
+## 🌆 Ciudades Monitoreadas
+Las 31 capitales departamentales de Colombia:
 
-El proyecto ya está configurado para trabajar con ciudades colombianas. Si deseas sumar más municipios, solo modifica la lista `CITIES` en `etl/extractor.py` con nuevas entradas dentro de Colombia.
+| Departamento | Capital | Departamento | Capital |
+|---|---|---|---|
+| Amazonas | Leticia | Nariño | Pasto |
+| Antioquia | Medellín | Norte de Santander | Cúcuta |
+| Arauca | Arauca | Quindío | Armenia |
+| Atlántico | Barranquilla | Risaralda | Pereira |
+| Bolívar | Cartagena | San Andrés y Providencia | San Andrés |
+| Boyacá | Tunja | Santander | Bucaramanga |
+| Caldas | Manizales | Sucre | Sincelejo |
+| Caquetá | Florencia | Tolima | Ibagué |
+| Casanare | Yopal | Valle del Cauca | Cali |
+| Cauca | Popayán | Vaupés | Mitú |
+| Cesar | Valledupar | Vichada | Puerto Carreño |
+| Chocó | Quibdó | Cundinamarca | Bogotá |
+| Córdoba | Montería | Guainía | Inírida |
+| Guaviare | San José del Guaviare | Meta | Villavicencio |
+| Huila | Neiva | La Guajira | Riohacha |
+| Magdalena | Santa Marta | | |
+
+---
+
+## 💡 Ideas de Análisis
+- Detectar anomalías climáticas por ciudad y departamento
+- Comparar patrones climáticos entre regiones (costa, altiplano, Amazonía)
+- Predecir temperatura máxima y mínima con modelos de ML
+- Analizar correlaciones entre temperatura, humedad, presión y viento
+- Identificar ciudades con mayor frecuencia de alertas climáticas
+
+---
+
+## 📚 Tecnologías Usadas
+
+| Tecnología | Uso |
+|---|---|
+| Python 3.12 | Lenguaje principal |
+| PostgreSQL 15 | Base de datos relacional |
+| Supabase | PostgreSQL en la nube |
+| Streamlit | Dashboard web |
+| Plotly | Gráficas interactivas |
+| Scikit-learn | Modelos de ML |
+| Docker / Docker Compose | Contenedores y orquestación |
+| GitHub Actions | Automatización del ETL |
+| OpenWeatherMap API | Fuente de datos climáticos |
+| Jupyter Notebook | Análisis exploratorio y ML |
+
+---
+
+## ✅ Nota Final
+El proyecto está configurado para trabajar con las 31 capitales colombianas. Si deseas agregar más municipios, modifica la lista `CITIES` en `etl/extractor.py` con nuevas entradas en formato `("Ciudad,CO", "Departamento", "Nombre Display")`.
+
+---
+
+*Proyecto desarrollado para la asignatura de Minería de Datos 2026A*
