@@ -93,7 +93,7 @@ ETL-Proyecto-API/
 
 ## 📊 Dashboard
 
-**URL:** https://mineriadedatos2026a-e8anvqzyxjnfbdb45z5vdn.streamlit.app/
+**URL:** https://mineriadedatos2026a-yqzsgkv8rhyyavuayccwfv.streamlit.app/
 
 | Pestaña | Contenido |
 |---|---|
