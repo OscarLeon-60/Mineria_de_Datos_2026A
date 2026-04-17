@@ -11,3 +11,5 @@ __pycache__/
 
 # Sistemas
 .DS_Store
+# Evitar subir credenciales locales de streamlit
+.streamlit/secrets.toml
