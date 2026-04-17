@@ -4,6 +4,7 @@ import pandas as pd
 import logging
 import psycopg2
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
 
 # ==============================
@@ -90,6 +91,7 @@ CITIES = [
 try:
     conexion = psycopg2.connect(**DB_CONFIG)
     cursor = conexion.cursor()
+    cursor.execute("SET TIME ZONE 'America/Bogota'")
     print("✅ Conectado a PostgreSQL")
     logging.info("Conectado a PostgreSQL")
 except Exception as e:
@@ -134,9 +136,9 @@ for city_api, departamento, display_name in CITIES:
             nubosidad       = data["clouds"]["all"]
             latitud         = data["coord"]["lat"]
             longitud        = data["coord"]["lon"]
-            fecha_consulta  = datetime.now()
+            fecha_consulta  = datetime.now(tz=ZoneInfo("America/Bogota"))
 
-            print(f"✔ {display_name:<30} | {temperatura:>5.1f}°C | Humedad: {humedad}% | Viento: {viento} m/s")
+            print(f"✔ {display_name:<30} | {temperatura:>5.1f}°C | Humedad: {humedad}% | Viento: {viento} m/s | {fecha_consulta.strftime('%Y-%m-%d %H:%M:%S')}")
             logging.info(f"{display_name} - Temp:{temperatura} TMin:{temp_min} TMax:{temp_max} Hum:{humedad} Viento:{viento}")
 
             # ---- CSV ----
