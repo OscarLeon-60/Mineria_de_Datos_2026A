@@ -137,9 +137,9 @@ for city_api, departamento, display_name in CITIES:
             nubosidad       = data["clouds"]["all"]
             latitud         = data["coord"]["lat"]
             longitud        = data["coord"]["lon"]
-            fecha_consulta  = datetime.now(tz=ZoneInfo("America/Bogota"))
+            fecha_consulta  = datetime.now(tz=ZoneInfo("America/Bogota")).replace(tzinfo=None)
 
-            print(f"✔ {display_name:<30} | {temperatura:>5.1f}°C | Humedad: {humedad}% | Viento: {viento} m/s | Fecha: {fecha_consulta:%Y-%m-%d %H:%M:%S %Z}")
+            print(f"✔ {display_name:<30} | {temperatura:>5.1f}°C | Humedad: {humedad}% | Viento: {viento} m/s | Fecha: {fecha_consulta:%Y-%m-%d %H:%M:%S}")
             logging.info(f"{display_name} - Temp:{temperatura} TMin:{temp_min} TMax:{temp_max} Hum:{humedad} Viento:{viento}")
 
             # ---- CSV ----
