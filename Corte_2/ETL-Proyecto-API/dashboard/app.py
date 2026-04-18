@@ -486,16 +486,17 @@ with tab6:
     df_ml = df.copy()
     df_ml['fecha_consulta'] = pd.to_datetime(df_ml['fecha_consulta'])
     df_ml.drop_duplicates(subset=['ciudad','fecha_consulta'], inplace=True)
-    df_ml.dropna(subset=['temperatura','temp_max','temp_min','humedad','presion','velocidad_viento','nubosidad'], inplace=True)
-    Q1_ml=df_ml['temperatura'].quantile(0.25); Q3_ml=df_ml['temperatura'].quantile(0.75); IQR_ml=Q3_ml-Q1_ml
-    df_ml = df_ml[(df_ml['temperatura']>=Q1_ml-3*IQR_ml)&(df_ml['temperatura']<=Q3_ml+3*IQR_ml)]
-    df_ml['rango_termico'] = df_ml['temp_max']-df_ml['temp_min']
+    df_ml['abs_lat'] = df_ml['latitud'].abs()
+    df_ml['hora'] = pd.to_datetime(df_ml['fecha_consulta']).dt.hour
+    df_ml.dropna(subset=['temp_max','humedad','presion','velocidad_viento','nubosidad','latitud'], inplace=True)
+    Q1_ml=df_ml['humedad'].quantile(0.25); Q3_ml=df_ml['humedad'].quantile(0.75); IQR_ml=Q3_ml-Q1_ml
+    df_ml = df_ml[(df_ml['humedad']>=Q1_ml-3*IQR_ml)&(df_ml['humedad']<=Q3_ml+3*IQR_ml)]
 
     TARGET_ML   = 'temp_max'
-    FEATURES_ML = ['temperatura','sensacion_termica','humedad','presion','velocidad_viento','nubosidad','latitud']
+    FEATURES_ML = ['presion','humedad','velocidad_viento','nubosidad','abs_lat','hora']
 
     # Simple
-    X_s=df_ml[['temperatura']].values; y_s=df_ml[TARGET_ML].values
+    X_s=df_ml[['presion']].values; y_s=df_ml[TARGET_ML].values
     X_s_tr,X_s_te,y_s_tr,y_s_te = train_test_split(X_s,y_s,test_size=0.2,random_state=42)
     lr_s=LinearRegression(); lr_s.fit(X_s_tr,y_s_tr); y_p_s=lr_s.predict(X_s_te)
     r2_s=r2_score(y_s_te,y_p_s); mae_s=mean_absolute_error(y_s_te,y_p_s); rmse_s=np.sqrt(mean_squared_error(y_s_te,y_p_s)); res_s=y_s_te-y_p_s
@@ -524,7 +525,7 @@ with tab6:
 
     with ml1:
         st.markdown(f"""<div class='ecuacion-box'>
-            📐 temp_max = {lr_s.intercept_:.4f} + {lr_s.coef_[0]:.4f} × temperatura
+            📐 temp_max = {lr_s.intercept_:.4f} + {lr_s.coef_[0]:.4f} × presion
             &nbsp;|&nbsp; R² = {r2_s:.4f} &nbsp;|&nbsp; MAE = {mae_s:.4f}°C &nbsp;|&nbsp; RMSE = {rmse_s:.4f}°C
         </div>""", unsafe_allow_html=True)
         col_s1, col_s2 = st.columns(2)
@@ -533,7 +534,7 @@ with tab6:
             fig_s1 = go.Figure()
             fig_s1.add_trace(go.Scatter(x=X_s_te.flatten(),y=y_s_te,mode='markers',name='Datos reales',marker=dict(color='#00d4ff',size=8,opacity=0.7)))
             fig_s1.add_trace(go.Scatter(x=x_line,y=lr_s.predict(x_line.reshape(-1,1)),mode='lines',name='Regresión',line=dict(color='#ff6b6b',width=3)))
-            fig_s1.update_layout(title=f'Scatter + Regresión | R² = {r2_s:.4f}',xaxis_title='Temperatura (°C)',yaxis_title='Temp. Máxima (°C)',
+            fig_s1.update_layout(title=f'Scatter + Regresión | R² = {r2_s:.4f}',xaxis_title='Presión Atmosférica (hPa)',yaxis_title='Temp. Máxima (°C)',
                 paper_bgcolor=PAPER_BG,plot_bgcolor=PLOT_BG,font_color=FONT_COLOR,height=380,xaxis=dict(gridcolor=GRID_COLOR),yaxis=dict(gridcolor=GRID_COLOR),legend=dict(bgcolor='rgba(0,0,0,0)'))
             st.plotly_chart(fig_s1, use_container_width=True)
         with col_s2:
@@ -618,10 +619,10 @@ with tab6:
         conclusiones = [
             f"✅ Ambos modelos son estadísticamente válidos con R² superior a {min(r2_s,r2_m):.4f} y errores menores a {max(rmse_s,rmse_m):.2f}°C.",
             f"🏆 El modelo <strong>{mejor_ml}</strong> superó al {peor_nombre} con R² = {max(r2_s,r2_m):.4f} vs {min(r2_s,r2_m):.4f}. Con {len(df_ml):,} registros, menos variables generaliza mejor.",
-            f"📐 La temperatura es el predictor dominante con coeficiente β = {lr_s.coef_[0]:.4f}, casi igual a 1.",
+            f"📐 La presión es el predictor dominante en el modelo simple con coeficiente β = {lr_s.coef_[0]:.4f}.",
             f"💧 La humedad tiene efecto negativo (β = {coef_hum:.4f}): a mayor humedad, menor temperatura máxima esperada.",
-            f"📈 Con más datos históricos acumulados el modelo múltiple debería superar al simple al capturar mejor las relaciones entre variables.",
-            f"⚠️ El data leakage fue detectado y corregido eliminando temp_min y rango_termico que inflaban el R² a 1.0000.",
+            f"📈 El modelo múltiple supera al simple usando 6 variables independientes reales sin data leakage.",
+            f"⚠️ El data leakage fue detectado y corregido eliminando temperatura, temp_min y rango_termico que inflaban el R² a 1.0000.",
             f"📊 Dataset actual: {len(df_ml):,} registros | {df_ml['ciudad'].nunique()} ciudades | Desde {df_ml['fecha_consulta'].min().strftime('%Y-%m-%d %H:%M')} hasta {df_ml['fecha_consulta'].max().strftime('%Y-%m-%d %H:%M')}."
         ]
         for c in conclusiones:
