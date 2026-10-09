@@ -331,7 +331,7 @@ with tab1:
         fig_map = px.scatter_mapbox(df_ultima, lat="latitud", lon="longitud", color=var_mapa, size=var_mapa,
             size_max=25, hover_name="ciudad",
             hover_data={"departamento":True,"temperatura":":.1f","humedad":True,"velocidad_viento":":.1f","descripcion":True,"latitud":False,"longitud":False},
-            color_continuous_scale=color_scales[var_mapa], mapbox_style="carto-darkmatter",
+            color_continuous_scale=color_scales[var_mapa], mapbox_style="open-street-map",
             zoom=4.5, center={"lat":4.5709,"lon":-74.2973},
             title=f"{var_mapa.replace('_',' ').title()} Actual ({unidades[var_mapa]})")
         fig_map.update_layout(paper_bgcolor=PAPER_BG, plot_bgcolor=PLOT_BG, font_color=FONT_COLOR,
