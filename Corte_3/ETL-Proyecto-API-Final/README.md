@@ -353,9 +353,11 @@ Los modelos implementados permitieron realizar predicciones numéricas y clasifi
 
 ---
 
-# 👨‍💻 Autor
+# 👨‍💻 Autores
 
-Proyecto desarrollado para la asignatura de Minería de Datos 2026A.
+Proyecto desarrollado para la asignatura de Minería de Datos, período 2026B.
 
-Alan Zapata
-Oscar Fabián León Triana
+- Karina Cantillo Plaza
+- Oscar Fabián León Triana
+
+**Profesor:** CESAR AUGUSTO PEREZ TAFUR
