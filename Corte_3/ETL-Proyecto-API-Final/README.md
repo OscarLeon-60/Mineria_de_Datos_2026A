@@ -164,6 +164,13 @@ El sistema cuenta con un dashboard desarrollado en Streamlit que permite:
 - Explorar correlaciones
 - Visualizar resultados de Machine Learning
 
+En **⚙️ Opciones / Options**, selecciona **Español** o **English** para cambiar
+el idioma del panel durante la sesión. Los nombres de ciudades y departamentos
+se conservan; las descripciones climáticas y alertas conocidas se traducen en
+pantalla. Los textos desconocidos de la fuente permanecen en su idioma original.
+El CSV descargado conserva los nombres de columnas y valores originales para no
+alterar su formato. Los controles propios de Streamlit pueden mantener su idioma.
+
 ---
 
 # 🤖 Modelos de Machine Learning
